@@ -6,7 +6,7 @@ module CarrierWave
       end
 
       def retrieve!(file)
-        CarrerWave::Storage::TrueVault::File.new(uploader, config, uploader.store_path(file), truevault_client)
+        CarrierWave::Storage::TrueVault::File.new(uploader, config, uploader.store_path(file), truevault_client)
       end
 
       def truevault_client
