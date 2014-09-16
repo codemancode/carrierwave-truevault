@@ -1,3 +1,5 @@
+# Code extracted from https://github.com/marks/truevault.rb
+
 module TrueVault
   # Custom parser class for TrueVault API
   class Parser < HTTParty::Parser
