@@ -2,11 +2,12 @@ module CarrierWave
   module Storage
     class TrueVault < Abstract
       def store!(file)
-        truevault_client.create_blob(config[:truevault_vault_id], file.to_file)
+        f = CarrierWave::Storage::TrueVault::File.new(uploader, config, uploader.store_path(file))
+        f.store(file)
       end
 
       def retrieve!(file)
-        CarrierWave::Storage::TrueVault::File.new(uploader, config, uploader.store_path(file), truevault_client)
+        CarrierWave::Storage::TrueVault::File.new(uploader, config, uploader.store_path(file))
       end
 
       def truevault_client
@@ -30,8 +31,39 @@ module CarrierWave
         include CarrierWave::Utilities::Uri
         attr_reader :path
 
-        def initialize(uploader, config, path, client)
-          @uploader, @config, @path, @client = uploader, config, path, client
+        def initialize(uploader, config, path)
+          @uploader, @config, @path, @client = uploader, config, path
+        end
+
+        def store(file)
+          client.create_blob(config[:truevault_vault_id], file.to_file)
+        end
+
+        ##
+        # Return size of file body
+        #
+        # === Returns
+        #
+        # [Integer] size of file body
+        #
+        def size
+          file.content_length
+        end
+
+        ##
+        # Read content of file from service
+        #
+        # === Returns
+        #
+        # [String] contents of file
+        def read
+          file.body
+        end
+
+        private
+
+        def client
+          CarrierWave::TrueVault::Client.new(config[:truevault_api_key])
         end
 
       end
