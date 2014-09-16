@@ -1,4 +1,4 @@
-# Carrierwave::Truevault
+# Carrierwave::TrueVault
 
 This gem adds support for [TrueVault](https://truevault.com) to the CarrierWave.
 
