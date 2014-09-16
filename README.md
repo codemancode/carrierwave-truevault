@@ -1,6 +1,6 @@
 # Carrierwave::Truevault
 
-TODO: Write a gem description
+This gem adds support for [TrueVault](https://truevault.com) to the CarrierWave.
 
 ## Installation
 
@@ -18,7 +18,20 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+You'll need to add a configuration block in your ```
+config/initializers/carrierwave.rb ``` file.
+
+    CarrierWave.configure do |config|
+      config.storage = :truevault
+      config.truevault_api_key = "xxxxxx......"
+      config.truevault_vault_id = "xxxxx......"
+    end
+
+In your uploader add truevault as the storage option:
+
+    class DocumentUploader < CarrierWave::Uploader::Base
+      storage :truevault
+    end
 
 ## Contributing
 
