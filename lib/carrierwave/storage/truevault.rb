@@ -29,13 +29,14 @@ module CarrierWave
 
       class File
         include CarrierWave::Utilities::Uri
-        attr_reader :path
+        attr_reader :path, :file
 
         def initialize(uploader, config, path)
           @uploader, @config, @path, @client = uploader, config, path
         end
 
         def store(file)
+          @file = file.to_file
           client.create_blob(config[:truevault_vault_id], file.to_file)
         end
 
@@ -47,7 +48,7 @@ module CarrierWave
         # [Integer] size of file body
         #
         def size
-          file.content_length
+          @file.content_length
         end
 
         ##
@@ -57,7 +58,7 @@ module CarrierWave
         #
         # [String] contents of file
         def read
-          file.body
+          @file.body
         end
 
         private
