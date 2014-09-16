@@ -5,7 +5,7 @@ require 'carrierwave/truevault/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "carrierwave-truevault"
-  spec.version       = Carrierwave::Truevault::VERSION
+  spec.version       = Carrierwave::TrueVault::VERSION
   spec.authors       = ["Matthew McFarling"]
   spec.email         = ["matt@codemancode.com"]
   spec.summary       = %q{TrueVault integration for Carrierwave.}
