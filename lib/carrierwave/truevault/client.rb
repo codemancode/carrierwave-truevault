@@ -51,9 +51,8 @@ module CarrierWave
       # api_key         should be a valid TrueVault API key
       # account_id      should be a valid TrueVault account ID
       # api_version     should be a valid API version (ex 'v1')
-      def initialize(api_key, account_id, api_version = 'v1')
+      def initialize(api_key, api_version = 'v1')
         @api_key = api_key
-        @account_id = account_id
         @api_ver = api_version
         instance_variables.each do |variable|
           raise ArgumentError, "#{variable} should not be nil or blank" if instance_variable_get(variable.to_sym).to_s == ""
@@ -87,11 +86,6 @@ module CarrierWave
         options.merge!(default_options_to_merge_with)
         options[:body] = {:document => hash_to_base64_json(document_data)}
         self.class.put("/#{@api_ver}/vaults/#{vault_id}/documents/#{document_id}", options)
-      end
-
-      def list_vaults(options = {})
-        options.merge!(default_options_to_merge_with)
-        self.class.get("/#{@api_ver}/accounts/#{@account_id}/vaults", options)
       end
 
       #####################################

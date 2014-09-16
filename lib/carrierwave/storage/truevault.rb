@@ -11,9 +11,7 @@ module CarrierWave
 
       def truevault_client
         @truevault_client ||= begin
-          CarrierWave::TrueVault::Client.new(config[:truevault_api_key],
-                                             config[:truevault_account_id],
-                                             config[:truevault_api_version])
+          CarrierWave::TrueVault::Client.new(config[:truevault_api_key])
         end
       end
 
@@ -23,8 +21,6 @@ module CarrierWave
         @config ||= {}
 
         @config[:truevault_api_key] ||= uploader.truevault_api_key
-        @config[:truevault_account_id] ||= uploader.truevault_account_id
-        @config[:truevault_api_version] ||= uploader.truevault_api_version
         @config[:truevault_vault_id] ||= uploader.truevault_vault_id
 
         @config
