@@ -22,19 +22,19 @@ You'll need to add a configuration block in your ```
 config/initializers/carrierwave.rb ``` file.
 
     ```ruby
-CarrierWave.configure do |config|
-  config.storage = :truevault
-  config.truevault_api_key = "xxxxxx......"
-  config.truevault_vault_id = "xxxxx......"
-end
+    CarrierWave.configure do |config|
+      config.storage = :truevault
+      config.truevault_api_key = "xxxxxx......"
+      config.truevault_vault_id = "xxxxx......"
+    end
     ```
 
 In your uploader add truevault as the storage option:
 
     ```ruby
-class DocumentUploader < CarrierWave::Uploader::Base
-  storage :truevault
-end
+    class DocumentUploader < CarrierWave::Uploader::Base
+      storage :truevault
+    end
     ```
 
 ## Contributing
