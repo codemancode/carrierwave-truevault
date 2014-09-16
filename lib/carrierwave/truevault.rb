@@ -1,4 +1,5 @@
 require 'carrierwave'
+require 'carrierwave/truevault/client'
 require 'carrierwave/storage/truevault'
 require "carrierwave/truevault/version"
 
