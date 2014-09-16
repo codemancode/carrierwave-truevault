@@ -37,7 +37,7 @@ module CarrierWave
         end
 
         def store(file)
-          @response = client.create_blob(config[:truevault_vault_id], file.to_file)
+          @response = client.create_blob(@config[:truevault_vault_id], file.to_file)
         end
 
         def size
@@ -63,11 +63,11 @@ module CarrierWave
         private
 
         def client
-          CarrierWave::TrueVault::Client.new(config[:truevault_api_key])
+          CarrierWave::TrueVault::Client.new(@config[:truevault_api_key])
         end
 
         def file
-          @file ||= client.get_blob(config[:truevault_vault_id], @response["blob_id"])
+          @file ||= client.get_blob(@config[:truevault_vault_id], @response["blob_id"])
           tmp = Tempfile.new('blob')
           tmp.binmode
           tmp.write(body)
