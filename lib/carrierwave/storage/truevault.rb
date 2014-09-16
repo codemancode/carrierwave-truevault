@@ -29,42 +29,50 @@ module CarrierWave
 
       class File
         include CarrierWave::Utilities::Uri
-        attr_reader :path, :file
+        attr_reader :path
+        attr_accessor :response
 
         def initialize(uploader, config, path)
-          @uploader, @config, @path, @client = uploader, config, path
+          @uploader, @config, @path = uploader, config, path
         end
 
         def store(file)
-          @file = file.to_file
-          client.create_blob(config[:truevault_vault_id], file.to_file)
+          @response = client.create_blob(config[:truevault_vault_id], file.to_file)
         end
 
-        ##
-        # Return size of file body
-        #
-        # === Returns
-        #
-        # [Integer] size of file body
-        #
         def size
-          @file.content_length
+          file.content_length
         end
 
-        ##
-        # Read content of file from service
-        #
-        # === Returns
-        #
-        # [String] contents of file
         def read
-          @file.body
+          file.body
+        end
+
+        def filename
+          @response["blob_filename"]
+        end
+
+        def file_id
+          @response["blob_id"]
+        end
+
+        def transaction_id
+          @response["transaction_id"]
         end
 
         private
 
         def client
           CarrierWave::TrueVault::Client.new(config[:truevault_api_key])
+        end
+
+        def file
+          @file ||= client.get_blob(config[:truevault_vault_id], @response["blob_id"])
+          tmp = Tempfile.new('blob')
+          tmp.binmode
+          tmp.write(body)
+          tmp.rewind
+          tmp
         end
 
       end
