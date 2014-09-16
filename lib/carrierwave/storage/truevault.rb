@@ -2,7 +2,7 @@ module CarrierWave
   module Storage
     class TrueVault < Abstract
       def store!(file)
-        truevault_client.create_blob(@vault_id, file.to_file)
+        truevault_client.create_blob(config[:truevault_vault_id], file.to_file)
       end
 
       def retrieve!(file)
