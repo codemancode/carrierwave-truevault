@@ -93,7 +93,7 @@ module CarrierWave
           truevault_file = file.to_file
           @content_type ||= file.content_type
           @file = client.create_blob(@uploader.truevault_vault_id, truevault_file)
-          @blob_id = @file.blob_id
+          @blob_id = @file["blob_id"]
           truevault_file.close if truevault_file && !truevault_file.closed?
           true
         end
