@@ -2,16 +2,14 @@ module CarrierWave
   module Storage
     class TrueVault < Abstract
       def store!(file)
-        f = CarrierWave::Storage::TrueVault::File.new(uploader, self, uploader.store_path(file))
+        f = CarrierWave::Storage::TrueVault::File.new(uploader, self, uploader.store_path)
         f.store(file)
         f
       end
 
-      def retrieve!(file)
-        CarrierWave::Storage::TrueVault::File.new(uploader, self, uploader.store_path(file))
+      def retrieve!(identifier)
+        CarrierWave::Storage::TrueVault::File.new(uploader, self, uploader.store_path(identifier))
       end
-
-      private
 
       class File
         include CarrierWave::Utilities::Uri
@@ -23,6 +21,8 @@ module CarrierWave
         # [String] a path to file
         #
         attr_reader :path
+
+        attr_accessor :blob_id, :blob_filename, :transaction_id
 
         ##
         # Return all attributes from file
@@ -92,21 +92,11 @@ module CarrierWave
         def store(file)
           truevault_file = file.to_file
           @content_type ||= file.content_type
-          client.create_blob(@uploader.truevault_vault_id, file.to_file)
+          response = client.create_blob(@uploader.truevault_vault_id, file.to_file)
+          @blob_id ||= response["blob_id"]
+          @blob_filename ||= response["blob_filename"]
           truevault_file.close if truevault_file && !truevault_file.closed?
           true
-        end
-
-        def filename
-          @response["blob_filename"]
-        end
-
-        def file_id
-          @response["blob_id"]
-        end
-
-        def transaction_id
-          @response["transaction_id"]
         end
 
         private
@@ -116,8 +106,8 @@ module CarrierWave
         end
 
         def file
-          @file ||= client.get_blob(@uploader.truevault_vault_id, @response["blob_id"])
-          tmp = Tempfile.new('blob')
+          @file ||= client.get_blob(@uploader.truevault_vault_id, @blob_id)
+          tmp = Tempfile.new(@blob_filename)
           tmp.binmode
           tmp.write(body)
           tmp.rewind
