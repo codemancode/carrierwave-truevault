@@ -92,7 +92,8 @@ module CarrierWave
         def store(file)
           truevault_file = file.to_file
           @content_type ||= file.content_type
-          response = client.create_blob(@uploader.truevault_vault_id, file.to_file)
+          response = client.create_blob(@uploader.truevault_vault_id, truevault_file)
+          raise TrueVaultStoreError, "TrueVaultStoreError", response
           @blob_id ||= response["blob_id"]
           @blob_filename ||= response["blob_filename"]
           truevault_file.close if truevault_file && !truevault_file.closed?
