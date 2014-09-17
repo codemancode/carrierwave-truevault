@@ -21,20 +21,12 @@ module CarrierWave
 
         def initialize(uploader, base, path)
           @uploader, @base, @path = uploader, base, path
+          @response = {}
         end
 
         def store(file)
           truevault_file = file.to_file
-          content_type = truevault_file.content_type
-          client.create_blob(@uploader.truevault_vault_id, truevault_file)
-          @reponse = {
-            :body => truevault_file ? truevault_file : truevault_file.read,
-            :content_type => content_type,
-            :filename => filename,
-            :filesize => truevault_file.length,
-            :file_id => file_id,
-            :transaction_id => transaction_id
-          }
+          @response = client.create_blob(@uploader.truevault_vault_id, truevault_file)
         end
 
         def filename
