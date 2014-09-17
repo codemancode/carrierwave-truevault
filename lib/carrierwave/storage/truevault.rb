@@ -109,7 +109,7 @@ module CarrierWave
 
         def file
           @file ||= client.get_blob(@uploader.truevault_vault_id, @blob_id)
-          tmp = Tempfile.new(@blob_filename)
+          tmp = Tempfile.new('blob')
           tmp.binmode
           tmp.write(body)
           tmp.rewind
