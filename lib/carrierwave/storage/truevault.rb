@@ -106,7 +106,7 @@ module CarrierWave
 
         def file
           tmp = client.get_blob(@uploader.truevault_vault_id, @blob_id)
-          @file ||= IO.binread(@file)
+          @file ||= IO.binread(tmp)
           @file
         end
 
