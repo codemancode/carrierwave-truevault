@@ -15,18 +15,86 @@ module CarrierWave
 
       class File
         include CarrierWave::Utilities::Uri
-      
+        ##
+        # Current local path to file
+        #
+        # === Returns
+        #
+        # [String] a path to file
+        #
         attr_reader :path
-        attr_accessor :response
+
+        ##
+        # Return all attributes from file
+        #
+        # === Returns
+        #
+        # [Hash] attributes from file
+        #
+        def attributes
+          file.attributes
+        end
+
+        ##
+        # Lookup value for file content-type header
+        #
+        # === Returns
+        #
+        # [String] value of content-type
+        #
+        def content_type
+          @content_type || file.content_type
+        end
+
+        ##
+        # Set non-default content-type header (default is file.content_type)
+        #
+        # === Returns
+        #
+        # [String] returns new content type value
+        #
+        def content_type=(new_content_type)
+          @content_type = new_content_type
+        end
 
         def initialize(uploader, base, path)
           @uploader, @base, @path = uploader, base, path
-          @response = {}
         end
 
+        ##
+        # Read content of file from service
+        #
+        # === Returns
+        #
+        # [String] contents of file
+        def read
+          file.body
+        end
+
+        ##
+        # Return size of file body
+        #
+        # === Returns
+        #
+        # [Integer] size of file body
+        #
+        def size
+          file.content_length
+        end
+
+        ##
+        # Write file to service
+        #
+        # === Returns
+        #
+        # [Boolean] true on success or raises error
+        #
         def store(file)
           truevault_file = file.to_file
-          @response = client.create_blob(@uploader.truevault_vault_id, truevault_file)
+          @content_type ||= file.content_type
+          client.create_blob(@uploader.truevault_vault_id, file.to_file)
+          truevault_file.close if truevault_file && !truevault_file.closed?
+          true
         end
 
         def filename
