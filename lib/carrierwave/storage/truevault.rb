@@ -100,6 +100,8 @@ module CarrierWave
           true
         end
 
+        class TrueVaultStoreError < Exception; end
+
         private
 
         def client
