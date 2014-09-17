@@ -92,14 +92,11 @@ module CarrierWave
         def store(file)
           truevault_file = file.to_file
           @content_type ||= file.content_type
-          response = client.create_blob(@uploader.truevault_vault_id, truevault_file)
-          @blob_id = response["blob_id"]
-          @blob_filename ||= file.filename
+          @file = client.create_blob(@uploader.truevault_vault_id, truevault_file)
+          @blob_id = @file.blob_id
           truevault_file.close if truevault_file && !truevault_file.closed?
           true
         end
-
-        class TrueVaultStoreError < Exception; end
 
         private
 
@@ -108,12 +105,9 @@ module CarrierWave
         end
 
         def file
-          @file ||= client.get_blob(@uploader.truevault_vault_id, @blob_id)
-          tmp = Tempfile.new('blob')
-          tmp.binmode
-          tmp.write(body)
-          tmp.rewind
-          tmp
+          tmp = client.get_blob(@uploader.truevault_vault_id, @blob_id)
+          @file ||= IO.binread(@file)
+          @file
         end
 
       end
