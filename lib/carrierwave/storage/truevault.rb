@@ -68,7 +68,7 @@ module CarrierWave
         #
         # [String] contents of file
         def read
-          file.body
+          file
         end
 
         ##
