@@ -87,7 +87,7 @@ module CarrierWave
         # [File]
         #
         def retrieve(identifier)
-          @file = client.get_blob(@uploader.truevault_vault_id, truevault_file)
+          @file = client.get_blob(@uploader.truevault_vault_id, @upload.truevault_attributes["blob_id"])
           IO.binread(@file)
         end
 
