@@ -12,16 +12,6 @@ module CarrierWave
       end
 
       class File
-        include CarrierWave::Utilities::Uri
-        ##
-        # Current local path to file
-        #
-        # === Returns
-        #
-        # [String] a path to file
-        #
-        attr_reader :path
-
         attr_accessor :blob_id, :blob_filename, :transaction_id
 
         ##
@@ -32,7 +22,11 @@ module CarrierWave
         # [Hash] attributes from file
         #
         def attributes
-          file.attributes
+          @attributes
+        end
+
+        def attributes=(attrs)
+          @attributes = attrs
         end
 
         ##
@@ -93,12 +87,16 @@ module CarrierWave
           truevault_file = file.to_file
           @content_type ||= file.content_type
           @file = client.create_blob(@uploader.truevault_vault_id, truevault_file)
-          @blob_id = @file["blob_id"]
+          @attributes = @file
           truevault_file.close if truevault_file && !truevault_file.closed?
           true
         end
 
         private
+
+        def model
+          @uploader.model
+        end
 
         def client
           CarrierWave::TrueVault::Client.new(@uploader.truevault_api_key)
