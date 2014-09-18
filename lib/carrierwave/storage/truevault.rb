@@ -92,7 +92,7 @@ module CarrierWave
           truevault_file = file.to_file
           @content_type ||= file.content_type
           @file = client.create_blob(@uploader.truevault_vault_id, truevault_file)
-          @attributes ||= @attributes.merge!(@file.parsed_response)
+          @uploader.fog_attributes.merge!(@file.parsed_response)
         end
 
         private
