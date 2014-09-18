@@ -14,6 +14,12 @@ module CarrierWave
       end
 
       class File
+        include CarrierWave::Utilities::Uri
+        attr_reader :path
+
+        def url
+          File.basename(path)
+        end
         ##
         # Lookup value for file content-type header
         #
