@@ -23,9 +23,9 @@ config/initializers/carrierwave.rb ``` file.
 
 ```ruby
 CarrierWave.configure do |config|
-  config.storage = :truevault
   config.truevault_api_key = "xxxxxx......"
   config.truevault_vault_id = "xxxxx......"
+  config.truevault_attributes = {}
 end
 ```
 
