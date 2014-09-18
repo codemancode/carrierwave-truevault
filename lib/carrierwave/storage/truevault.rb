@@ -8,27 +8,12 @@ module CarrierWave
       end
 
       def retrieve!(identifier)
-        CarrierWave::Storage::TrueVault::File.new(uploader, self, uploader.store_path(identifier))
+        f = CarrierWave::Storage::TrueVault::File.new(uploader, self, uploader.store_path(identifier))
+        f.retrieve(identifier)
+        f
       end
 
-      class File < CarrierWave::SanitizedFile
-        attr_accessor :blob_id, :blob_filename, :transaction_id
-
-        ##
-        # Return all attributes from file
-        #
-        # === Returns
-        #
-        # [Hash] attributes from file
-        #
-        def attributes
-          @attributes || {}
-        end
-
-        def attributes=(attrs)
-          @attributes = attrs
-        end
-
+      class File
         ##
         # Lookup value for file content-type header
         #
@@ -52,7 +37,6 @@ module CarrierWave
         end
 
         def initialize(uploader, base, path)
-          super(path)
           @uploader, @base, @path = uploader, base, path
         end
 
@@ -92,7 +76,19 @@ module CarrierWave
           truevault_file = file.to_file
           @content_type ||= file.content_type
           @file = client.create_blob(@uploader.truevault_vault_id, truevault_file)
-          @uploader.fog_attributes.merge!(@file.parsed_response)
+          @uploader.truevault_attributes.merge!(@file.parsed_response)
+        end
+
+        ##
+        # Retrieve file from service
+        #
+        # === Returns
+        #
+        # [File]
+        #
+        def retrieve(identifier)
+          @file = client.get_blob(@uploader.truevault_vault_id, truevault_file)
+          IO.binread(@file)
         end
 
         private
@@ -106,7 +102,7 @@ module CarrierWave
         end
 
         def file
-          tmp = client.get_blob(@uploader.truevault_vault_id, @blob_id)
+          tmp = client.get_blob(@uploader.truevault_vault_id, @upload.truevault_attributes["blob_id"])
           @file ||= IO.binread(tmp)
           @file
         end
