@@ -22,7 +22,7 @@ module CarrierWave
         # [Hash] attributes from file
         #
         def attributes
-          @attributes
+          @attributes || {}
         end
 
         def attributes=(attrs)
@@ -87,8 +87,7 @@ module CarrierWave
           truevault_file = file.to_file
           @content_type ||= file.content_type
           @file = client.create_blob(@uploader.truevault_vault_id, truevault_file)
-          @attributes = @file.parsed_response
-          raise "DEBUG THIS"
+          @uploader.truevault_attributes = @file.parsed_response
           truevault_file.close if truevault_file && !truevault_file.closed?
           true
         end
