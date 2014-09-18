@@ -11,7 +11,7 @@ module CarrierWave
         CarrierWave::Storage::TrueVault::File.new(uploader, self, uploader.store_path(identifier))
       end
 
-      class File
+      class File < CarrierWave::SanitizedFile
         attr_accessor :blob_id, :blob_filename, :transaction_id
 
         ##
@@ -52,6 +52,7 @@ module CarrierWave
         end
 
         def initialize(uploader, base, path)
+          super(path)
           @uploader, @base, @path = uploader, base, path
         end
 
