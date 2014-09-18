@@ -76,6 +76,10 @@ module CarrierWave
           file.content_length
         end
 
+        def truevault_attributes
+          @uploader.truevault_attributes
+        end
+
         ##
         # Write file to service
         #
