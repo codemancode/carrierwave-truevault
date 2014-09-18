@@ -1,3 +1,5 @@
+require 'pathname'
+
 module CarrierWave
   module Storage
     class TrueVault < Abstract
@@ -17,8 +19,8 @@ module CarrierWave
         include CarrierWave::Utilities::Uri
         attr_reader :path
 
-        def url
-          File.basename(path)
+        def filename
+          Pathname.new(path).basename
         end
         ##
         # Lookup value for file content-type header
