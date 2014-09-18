@@ -88,7 +88,7 @@ module CarrierWave
         #
         def retrieve(identifier)
           @file = client.get_blob(@uploader.truevault_vault_id, model.blob_id)
-          @file ||= File.open(@file)
+          @file ||= File.open(@file.parsed_response)
         end
 
         private
