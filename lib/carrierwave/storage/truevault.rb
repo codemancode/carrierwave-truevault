@@ -47,7 +47,7 @@ module CarrierWave
         #
         # [String] contents of file
         def read
-          @file
+          file
         end
 
         ##
@@ -101,11 +101,11 @@ module CarrierWave
           CarrierWave::TrueVault::Client.new(@uploader.truevault_api_key)
         end
 
-        # def file
-        #   tmp = client.get_blob(@uploader.truevault_vault_id, @uploader.truevault_attributes["blob_id"])
-        #   @file ||= IO.binread(tmp)
-        #   @file
-        # end
+        def file
+          tmp = client.get_blob(@uploader.truevault_vault_id, model.blob_id)
+          @file ||= IO.binread(tmp.parsed_response)
+          @file
+        end
 
       end
     end
