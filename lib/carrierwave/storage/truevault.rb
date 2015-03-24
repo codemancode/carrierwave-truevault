@@ -20,7 +20,7 @@ module CarrierWave
         attr_reader :path
 
         def filename
-          Pathname.new(path).basename
+          Pathname.new(path).basename.to_s
         end
         ##
         # Lookup value for file content-type header
